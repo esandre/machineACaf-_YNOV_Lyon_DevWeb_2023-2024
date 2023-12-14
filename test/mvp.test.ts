@@ -59,5 +59,23 @@ describe('En tant que consommateur, je veux acheter un café, afin de le savoure
 
             // @ts-ignore
             expect(machine).nCafésSontServis(2);
+        });
+
+        test("ETANT DONNE une machine à café dysfonctionnelle " +
+            "QUAND on insère le prix d'un café " +
+            "ALORS aucun café n'est servi " +
+            "ET l'argent est encaissé", () => {
+            const machine = new MachineACaféBuilder()
+                .Dysfonctionnelle()
+                .Build();
+
+            const prix = Pièce.CinquanteCents;
+            machine.SimulerInsertionArgent(prix);
+
+            // @ts-ignore
+            expect(machine).aucuneSommeNEstEncaissée(prix);
+
+            // @ts-ignore
+            expect(machine).aucunCaféNEstServi();
         })
     });
