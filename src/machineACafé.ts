@@ -17,6 +17,9 @@ export class MachineACafé implements MachineACaféInterface {
     }
 
     private Insérer(prix: Pièce) : void {
+        if(prix.ValeurEnCentimes < Pièce.CinquanteCents.ValeurEnCentimes)
+            return;
+
         this._argentEncaissé += prix.ValeurEnCentimes;
         this._cafésServis ++;
     }

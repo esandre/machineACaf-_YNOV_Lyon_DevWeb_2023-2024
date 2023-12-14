@@ -3,6 +3,23 @@ import type {MatcherFunction} from 'expect';
 import {MachineACaféHarness} from "./machineACaféHarness";
 import {Pièce} from "../../src/pièce";
 
+const aucunCaféNEstServi: MatcherFunction<[attendu: unknown]> =
+    function (actual: unknown) {
+        if(!(actual instanceof MachineACaféHarness))
+            throw new Error("Only works with MachineACaféHarness");
+
+        const delta = actual.GetDeltaCafésServis();
+        const pass = delta == 0;
+        const message = pass
+            ? `Au moins un café devait être servi, aucun ne l'a été.`
+            : `Aucun café ne devait être servi, ${delta} l'ont été.`;
+
+        return {
+            message: () => message,
+            pass: pass
+        }
+    };
+
 const unCaféEstServi: MatcherFunction<[attendu: unknown]> =
     function (actual: unknown) {
         if(!(actual instanceof MachineACaféHarness))
@@ -61,8 +78,28 @@ const unePièceEstEncaissée: MatcherFunction<[attendu: unknown]> =
         }
     };
 
+const aucuneSommeNEstEncaissée: MatcherFunction<[attendu: unknown]> =
+    function (actual: unknown) {
+        if(!(actual instanceof MachineACaféHarness))
+            throw new Error("Only works with MachineACaféHarness");
+
+        const delta = actual.GetSommeEncaissée();
+        const pass = delta == 0;
+
+        const message = pass
+            ? `Il fallait encaisser de l'argent. Ca n'est pas le cas.`
+            : `Il ne fallait pas encaisser d'argent. ${delta} centimes l'ont été.`;
+
+        return {
+            message: () => message,
+            pass: pass
+        }
+    };
+
 expect.extend({
     unCaféEstServi,
     nCafésSontServis,
+    aucunCaféNEstServi,
+    aucuneSommeNEstEncaissée,
     unePièceEstEncaissée
 });

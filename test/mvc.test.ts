@@ -23,6 +23,27 @@ describe('En tant que consommateur, je veux acheter un café, afin de le savoure
             expect(machine).unCaféEstServi();
         });
 
+        test.each([
+            [Pièce.UnCentime],
+            [Pièce.DeuxCentimes],
+            [Pièce.CinqCentimes],
+            [Pièce.DixCentimes],
+            [Pièce.VingtCentimes]
+        ])("ETANT DONNE une machine à café " +
+            "QUAND on insère %s, somme inférieure au prix d'un café " +
+            "ALORS aucun café n'est servi " +
+            "ET l'argent est restitué", (prix: Pièce) => {
+            const machine = new MachineACaféBuilder().Build();
+
+            machine.SimulerInsertionArgent(prix);
+
+            // @ts-ignore
+            expect(machine).aucuneSommeNEstEncaissée(prix);
+
+            // @ts-ignore
+            expect(machine).aucunCaféNEstServi();
+        });
+
         test("ETANT DONNE une machine à café " +
             "QUAND on insère le prix d'un café, 2 fois " +
             "ALORS deux cafés sont servis " +
