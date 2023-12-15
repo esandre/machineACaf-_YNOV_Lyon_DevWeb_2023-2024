@@ -1,8 +1,11 @@
 import "./utilities/machineACaféMatchers"
 import {Pièce} from "../src/pièce";
 import {MachineACaféBuilder} from "./utilities/machineACaféBuilder";
+import {ProduitsEnum} from "./utilities/produits.enum";
 
-describe('En tant que consommateur, je veux acheter un café, afin de le savourer avec mes collègues exécrables',
+describe('En tant que consommateur, ' +
+    'Je veux acheter un café, ' +
+    'Afin de le savourer avec mes collègues exécrables',
     () => {
         test.each([
             [Pièce.CinquanteCents],
@@ -61,12 +64,17 @@ describe('En tant que consommateur, je veux acheter un café, afin de le savoure
             expect(machine).nCafésSontServis(2);
         });
 
-        test("ETANT DONNE une machine à café dysfonctionnelle " +
+        test.each([
+            [ProduitsEnum.CAFE],
+            [ProduitsEnum.CAFE_SUCRE],
+        ])("ETANT DONNE une machine à café dysfonctionnelle " +
+            "ET que l'on demande le produit %s " +
             "QUAND on insère le prix d'un café " +
             "ALORS aucun café n'est servi " +
-            "ET l'argent est encaissé", () => {
+            "ET l'argent est encaissé", (produit: ProduitsEnum) => {
             const machine = new MachineACaféBuilder()
                 .Dysfonctionnelle()
+                .ParamétréePourLeProduit(produit)
                 .Build();
 
             const prix = Pièce.CinquanteCents;
